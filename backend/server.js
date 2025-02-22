@@ -11,7 +11,6 @@ const cadastrarCliente = require("./routes/cadastrarCliente");
 const listarCliente = require("./routes/listarCliente");
 
 const app = express();
-const PORT = 5000;
 
 // Middleware para processar JSON
 app.use(express.json());
@@ -84,6 +83,7 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
  */
 
 // Iniciando o servidor
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`🚀 Servidor rodando em http://localhost:${PORT}`);
+  console.log(`Servidor rodando na porta ${PORT}`);
 });
