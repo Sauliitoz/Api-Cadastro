@@ -4,10 +4,6 @@ const swaggerUi = require("swagger-ui-express");
 const swaggerJsDoc = require("swagger-jsdoc");
 require("dotenv").config();
 
-//rota raiz
-app.get("/", (req, res) => {
-  res.send("API rodando corretamente!");
-});
 // Importando as rotas
 const atualizarCliente = require("./routes/atualizarCliente");
 const buscarCliente = require("./routes/buscaCliente");
@@ -29,6 +25,10 @@ app.use("/api/buscar", buscarCliente); //GET /api/buscar/{cpf}
 app.use("/api/novo", cadastrarCliente); //POST /api/novo
 app.use("/api/listar", listarCliente); //GET /api/listar
 
+//rota raiz
+app.get("/", (req, res) => {
+  res.send("API rodando corretamente!");
+});
 // Configuração do Swagger
 const swaggerOptions = {
   definition: {
