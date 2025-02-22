@@ -4,6 +4,10 @@ const swaggerUi = require("swagger-ui-express");
 const swaggerJsDoc = require("swagger-jsdoc");
 require("dotenv").config();
 
+//rota raiz
+app.get("/", (req, res) => {
+  res.send("API rodando corretamente!");
+});
 // Importando as rotas
 const atualizarCliente = require("./routes/atualizarCliente");
 const buscarCliente = require("./routes/buscaCliente");
