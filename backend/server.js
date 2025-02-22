@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const swaggerUi = require("swagger-ui-express");
 const swaggerJsDoc = require("swagger-jsdoc");
+require("dotenv").config();
 
 // Importando as rotas
 const atualizarCliente = require("./routes/atualizarCliente");
@@ -21,7 +22,7 @@ app.use(cors());
 // Importar rotas
 app.use("/api/alterar", atualizarCliente); //PUT /api/alterar/{cpf}
 app.use("/api/buscar", buscarCliente); //GET /api/buscar/{cpf}
-app.use("/api/novo", cadastrarCliente);//POST /api/novo
+app.use("/api/novo", cadastrarCliente); //POST /api/novo
 app.use("/api/listar", listarCliente); //GET /api/listar
 
 // Configuração do Swagger
@@ -31,7 +32,8 @@ const swaggerOptions = {
     info: {
       title: "API de Clientes",
       version: "1.0.0",
-      description: "API para gerenciar clientes usando CPF como identificador único",
+      description:
+        "API para gerenciar clientes usando CPF como identificador único",
     },
     servers: [{ url: "http://localhost:5000" }],
   },
