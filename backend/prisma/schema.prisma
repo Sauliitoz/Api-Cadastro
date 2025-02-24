@@ -8,11 +8,22 @@ datasource db {
 }
 
 model Cliente {
-  id     Int    @id @default(autoincrement())
-  cpf    String @unique
-  nome   String
-  rua    String
-  numero Int
-  bairro String
+  id          Int          @id @default(autoincrement())
+  cpf         String       @unique
+  nome        String
+  rua         String
+  numero      Int
+  bairro      String
+  assinaturas Assinatura[] // Relacionamento com Assinatura
 }
 
+model Assinatura {
+  id             Int      @id @default(autoincrement())
+  clienteCpf     String
+  dataAssinatura DateTime
+  quantidade     Int
+
+  cliente Cliente @relation(fields: [clienteCpf], references: [cpf], onDelete: Cascade)
+
+  @@unique([clienteCpf, dataAssinatura]) // Evita duplicidade na mesma data
+}

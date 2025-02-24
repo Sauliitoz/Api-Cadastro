@@ -33,10 +33,10 @@ const swaggerOptions = {
   definition: {
     openapi: "3.0.0",
     info: {
-      title: "API de Clientes",
+      title: "API de Pessoas",
       version: "1.0.0",
       description:
-        "API para gerenciar clientes usando CPF como identificador único",
+        "API para gerenciar pessoas usando CPF como identificador único",
     },
     servers: [{ url: "http://localhost:5000" }],
   },
@@ -50,7 +50,7 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
  * @swagger
  * components:
  *   schemas:
- *     Cliente:
+ *     Pessoa:
  *       type: object
  *       required:
  *         - cpf
@@ -61,12 +61,12 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
  *       properties:
  *         cpf:
  *           type: string
- *           description: CPF do cliente (único)
+ *           description: CPF da Pessoa (único)
  *         nome:
  *           type: string
- *           description: Nome do cliente
+ *           description: Nome da pessoa
  *         rua:
- *           type: string
+ *           type: Int
  *           description: Nome da rua
  *         numero:
  *           type: string
@@ -78,7 +78,7 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
  *         cpf: "12345678901"
  *         nome: "João Silva"
  *         rua: "Rua das Flores"
- *         numero: "123"
+ *         numero: 123
  *         bairro: "Centro"
  */
 

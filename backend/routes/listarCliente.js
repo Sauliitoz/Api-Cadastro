@@ -9,23 +9,23 @@ const prisma = new PrismaClient();
  * @swagger
  * /api/listar:
  *   get:
- *     summary: Lista todos os clientes
- *     tags: [Clientes]
+ *     summary: Lista todos as Pessoas cadastradas
+ *     tags: [Pessoas]
  *     responses:
  *       200:
- *         description: Lista de clientes retornada com sucesso
+ *         description: Lista de Pessoas retornada com sucesso
  *       500:
- *         description: Erro ao buscar clientes
+ *         description: Erro ao buscar pessoas
  */
 
-// Mostrar todos os clientes no banco de dados
+// Mostrar todos os Pessoas no banco de dados
 router.get("/", async (req, res) => {
   try {
     const clientes = await prisma.cliente.findMany(); 
     res.json(clientes);
   } catch (error) {
-    console.error("Erro ao buscar clientes:", error);
-    res.status(500).json({ error: "Erro ao buscar clientes" });
+    console.error("Erro ao buscar pessoas:", error);
+    res.status(500).json({ error: "Erro ao buscar pessoas" });
   }
 });
 

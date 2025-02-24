@@ -1,6 +1,6 @@
 const express = require("express");
 const { PrismaClient } = require("@prisma/client");
-const validarCpf = require("../utils/validarCpf"); // Ajuste o caminho conforme necessário
+const validarCpf = require("../utils/validarCpf"); 
 
 const router = express.Router();
 const prisma = new PrismaClient();
@@ -9,15 +9,15 @@ const prisma = new PrismaClient();
  * @swagger
  * /api/alterar/{cpf}:
  *   put:
- *     summary: Atualiza os dados de um cliente pelo CPF
- *     tags: [Clientes]
+ *     summary: Atualiza os dados de uma pessoa pelo CPF
+ *     tags: [Pessoas]
  *     parameters:
  *       - in: path
  *         name: cpf
  *         schema:
  *           type: string
  *         required: true
- *         description: CPF do cliente
+ *         description: CPF da pessoa
  *     requestBody:
  *       required: true
  *       content:
@@ -30,7 +30,7 @@ const prisma = new PrismaClient();
  *               rua:
  *                 type: string
  *               numero:
- *                 type: string
+ *                 type: int
  *               bairro:
  *                 type: string
  *             example:
@@ -42,10 +42,10 @@ const prisma = new PrismaClient();
  *       200:
  *         description: Dados atualizados com sucesso
  *       404:
- *         description: Cliente não encontrado
+ *         description: Pessoa não encontrada
  */
 
-// Atualizar um cliente pelo CPF
+// Atualizar uma pessoa pelo CPF
 router.put("/:cpf", async (req, res) => {
   let { cpf } = req.params;
   const { nome, rua, numero, bairro } = req.body;
@@ -63,7 +63,7 @@ router.put("/:cpf", async (req, res) => {
     const clienteExistente = await prisma.cliente.findUnique({ where: { cpf } });
 
     if (!clienteExistente) {
-      return res.status(404).json({ erro: "Cliente não encontrado" });
+      return res.status(404).json({ erro: "Pessoa não encontrada" });
     }
 
     const clienteAtualizado = await prisma.cliente.update({

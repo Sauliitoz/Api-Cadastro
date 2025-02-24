@@ -9,7 +9,7 @@ const prisma = new PrismaClient();
  * @swagger
  * /api/novo:
  *   post:
- *     summary: Cria um novo cliente
+ *     summary: Cria uma nova Pessoa
  *     tags: [Clientes]
  *     requestBody:
  *       required: true
@@ -25,20 +25,20 @@ const prisma = new PrismaClient();
  *               rua:
  *                 type: string
  *               numero:
- *                 type: string
+ *                 type: int
  *               bairro:
  *                 type: string
  *             example:
  *               cpf: "12345678900"
  *               nome: "Carlos Silva"
  *               rua: "Avenida Brasil"
- *               numero: "456"
+ *               numero: 345
  *               bairro: "Jardins"
  *     responses:
  *       201:
- *         description: Cliente criado com sucesso
+ *         description: Pessoa criada com sucesso
  *       400:
- *         description: Erro ao criar cliente (CPF já existe ou dados inválidos)
+ *         description: Erro ao criar Pessoa (CPF já existe ou dados inválidos)
  */
 
 router.post("/", async (req, res) => {
@@ -61,14 +61,14 @@ router.post("/", async (req, res) => {
       return res.status(400).json({ erro: "CPF já cadastrado" });
     }
 
-    // Cadastra novo cliente
+    // Cadastra nova Pessoa
     const novoCliente = await prisma.cliente.create({
       data: { cpf, nome, rua, numero, bairro },
     });
 
     res.status(201).json(novoCliente);
   } catch (error) {
-    res.status(400).json({ erro: "Erro ao cadastrar cliente", detalhes: error.message });
+    res.status(400).json({ erro: "Erro ao cadastrar Pessoa", detalhes: error.message });
   }
 });
 

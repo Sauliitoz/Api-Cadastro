@@ -9,23 +9,23 @@ const prisma = new PrismaClient();
  * @swagger
  * /api/buscar/{cpf}:
  *   get:
- *     summary: Obtém um cliente pelo CPF
- *     tags: [Clientes]
+ *     summary: Obtém uma pessoa pelo CPF
+ *     tags: [Pessoa]
  *     parameters:
  *       - in: path
  *         name: cpf
  *         schema:
  *           type: string
  *         required: true
- *         description: CPF do cliente
+ *         description: CPF da Pessoa
  *     responses:
  *       200:
- *         description: Cliente encontrado
+ *         description: Pessoa encontrada
  *       500:
- *         description: Erro ao buscar cliente
+ *         description: Erro ao buscar pessoa
  */
 
-// Buscar um cliente pelo CPF
+// Buscar uma pessoa pelo CPF
 router.get("/:cpf", async (req, res) => {
   let { cpf } = req.params;
 
@@ -42,7 +42,7 @@ router.get("/:cpf", async (req, res) => {
       return res
         .json({
           sucess: false,
-          erro: "Cliente não encontrado, você pode cadastra-lo agora",
+          erro: "Pessoa não encontrado, você pode cadastra-lo agora",
         });
     }
 
@@ -50,7 +50,7 @@ router.get("/:cpf", async (req, res) => {
   } catch (error) {
     res
       .status(500)
-      .json({ erro: "Erro na busca de Cliente ", detalhes: error.message });
+      .json({ erro: "Erro na busca da Pessoa ", detalhes: error.message });
   }
 });
 
