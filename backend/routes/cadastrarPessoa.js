@@ -10,7 +10,7 @@ const prisma = new PrismaClient();
  * /api/novo:
  *   post:
  *     summary: Cria uma nova Pessoa
- *     tags: [Clientes]
+ *     tags: [Pessoas]
  *     requestBody:
  *       required: true
  *       content:

@@ -3,12 +3,14 @@ const cors = require("cors");
 const swaggerUi = require("swagger-ui-express");
 const swaggerJsDoc = require("swagger-jsdoc");
 require("dotenv").config();
+const ROUTES = require("./config/routesConfig");
 
 // Importando as rotas
-const atualizarCliente = require("./routes/atualizarCliente");
-const buscarCliente = require("./routes/buscaCliente");
-const cadastrarCliente = require("./routes/cadastrarCliente");
-const listarCliente = require("./routes/listarCliente");
+const atualizarPessoa = require("./routes/atualizarPessoa");
+const buscarPessoa = require("./routes/buscaPessoa");
+const cadastrarPessoa = require("./routes/cadastrarPessoa");
+const listarPessoas = require("./routes/listarPessoas");
+const adicionarAssinatura = require("./routes/assinatura");
 
 const app = express();
 
@@ -19,10 +21,12 @@ app.use(express.json());
 app.use(cors());
 
 // Importar rotas
-app.use("/api/alterar", atualizarCliente); //PUT /api/alterar/{cpf}
-app.use("/api/buscar", buscarCliente); //GET /api/buscar/{cpf}
-app.use("/api/novo", cadastrarCliente); //POST /api/novo
-app.use("/api/listar", listarCliente); //GET /api/listar
+app.use(ROUTES.ASSINATURA, adicionarAssinatura);//POST /api/assinatura
+app.use(ROUTES.BUSCAR_CLIENTE, buscarPessoa);//GET /api/buscar/{cpf}
+app.use(ROUTES.CADASTRAR_CLIENTE, cadastrarPessoa);//POST /api/novo
+app.use(ROUTES.LISTAR_CLIENTE, listarPessoas);//GET /api/listar
+app.use(ROUTES.ATUALIZAR_PESSOA, atualizarPessoa);//PUT /api/alterar/{cpf}
+
 
 //rota raiz
 app.get("/", (req, res) => {

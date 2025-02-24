@@ -10,7 +10,7 @@ const prisma = new PrismaClient();
  * /api/buscar/{cpf}:
  *   get:
  *     summary: Obtém uma pessoa pelo CPF
- *     tags: [Pessoa]
+ *     tags: [Pessoas]
  *     parameters:
  *       - in: path
  *         name: cpf
