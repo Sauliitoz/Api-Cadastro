@@ -5,7 +5,12 @@ import {
   PessoaContainer,
   PessoaTitulo,
   PessoaInfo,
+  Section1,
+  SignatureList1,
+  SignatureItem1,
+  NoSignatureMessage1,
 } from "../styles/PessoaStyle";
+
 import { Form, Input } from "../styles/FormStyle";
 
 function Home() {
@@ -19,6 +24,7 @@ function Home() {
     numero: "",
     bairro: "",
   });
+  const [assinaturas, setAssinaturas] = useState([]);
 
   // Busca pessoa pelo CPF
   const handleSearch = async () => {
@@ -28,12 +34,14 @@ function Home() {
       if (data && data.pessoa) {
         console.log("Pessoa encontrada:", data.pessoa);
         setPessoa(data.pessoa);
+        setAssinaturas(data.assinaturas || []); // Armazena as assinaturas, se existirem
         setMostrarFormulario(false);
       } else {
         console.log(
           "CPF não encontrado no banco de Dados. Cadastre uma nova Pessoa."
         );
         setPessoa(null);
+        setAssinaturas([]);
         setMostrarFormulario(true);
         setFormData((prev) => ({ ...prev, cpf }));
       }
@@ -105,6 +113,25 @@ function Home() {
           <PessoaInfo>
             <span>Bairro:</span> {pessoa.bairro}
           </PessoaInfo>
+
+          <Section1>
+            <PessoaTitulo>Assinaturas</PessoaTitulo>
+            {assinaturas.length > 0 ? (
+              <SignatureList1>
+                {assinaturas.map((assinatura, index) => (
+                  <SignatureItem1 key={index}>
+                    <strong>Data:</strong>{" "}
+                    {new Date(assinatura.dataAssinatura).toLocaleDateString()} -
+                    <strong> Quantidade:</strong> {assinatura.quantidade}
+                  </SignatureItem1>
+                ))}
+              </SignatureList1>
+            ) : (
+              <NoSignatureMessage1>
+                Não há assinaturas registradas.
+              </NoSignatureMessage1>
+            )}
+          </Section1>
         </PessoaContainer>
       )}
 

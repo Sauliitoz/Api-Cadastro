@@ -26,3 +26,23 @@ export const PessoaInfo = styled.p`
     color: #222;
   }
 `;
+
+export const Section1 = styled.div`
+  margin-top: 20px;
+`;
+
+export const SignatureList1 = styled.ul`
+  list-style: none;
+  padding: 0;
+`;
+
+export const SignatureItem1 = styled.li`
+  padding: 10px;
+  background: #e3e3e3;
+  margin-top: 5px;
+  border-radius: 5px;
+`;
+
+export const NoSignatureMessage1 = styled.p`
+  color: red;
+`;
