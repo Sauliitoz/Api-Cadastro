@@ -4,7 +4,6 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 const router = express.Router();
 
-
 /**
  * @swagger
  * tags:
@@ -16,7 +15,7 @@ const router = express.Router();
  * @swagger
  * /api/assinatura:
  *   post:
- *     summary: Adiciona uma nova assinatura para um cliente
+ *     summary: Adiciona uma nova assinatura para uma pessoa
  *     tags: [Assinaturas]
  *     requestBody:
  *       required: true
@@ -25,13 +24,13 @@ const router = express.Router();
  *           schema:
  *             type: object
  *             required:
- *               - clienteCpf
+ *               - pessoaCpf
  *               - dataAssinatura
  *               - quantidade
  *             properties:
- *               clienteCpf:
+ *               pessoaCpf:
  *                 type: string
- *                 description: CPF do cliente vinculado à assinatura
+ *                 description: CPF da pessoa vinculada à assinatura
  *               dataAssinatura:
  *                 type: string
  *                 format: date
@@ -42,70 +41,46 @@ const router = express.Router();
  *     responses:
  *       201:
  *         description: Assinatura criada com sucesso
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 id:
- *                   type: integer
- *                   description: ID da assinatura criada
- *                 clienteCpf:
- *                   type: string
- *                   description: CPF do cliente
- *                 dataAssinatura:
- *                   type: string
- *                   format: date
- *                   description: Data da assinatura
- *                 quantidade:
- *                   type: integer
- *                   description: Quantidade de itens
  *       400:
- *         description: Erro de validação dos campos
+ *         description: CPF não cadastrado ou dados inválidos
  *       500:
  *         description: Erro interno ao adicionar assinatura
  */
 
-
 router.post("/", async (req, res) => {
-  const { clienteCpf, dataAssinatura, quantidade } = req.body;
-
-  if (!clienteCpf || !dataAssinatura || !quantidade) {
-    return res.status(400).json({ error: "Todos os campos são obrigatórios." });
-  }
-
-  if (quantidade <= 0) {
-    return res
-      .status(400)
-      .json({ error: "A quantidade deve ser maior que zero." });
-  }
-
-
   try {
-    // Insere a assinatura no banco
+    const { pessoaCpf, dataAssinatura, quantidade } = req.body;
+
+    // Verifica se a pessoa existe no banco de dados
+    const pessoaExiste = await prisma.pessoa.findUnique({
+      where: { cpf: pessoaCpf },
+    });
+
+    if (!pessoaExiste) {
+      return res.status(400).json({ erro: "Pessoa não cadastrada" });
+    }
+
+    // Criando assinatura associada à pessoa
     const novaAssinatura = await prisma.assinatura.create({
       data: {
-        clienteCpf,
-        dataAssinatura: new Date(dataAssinatura), // Converte para Date
-        quantidade: parseInt(quantidade),
+        pessoaCpf,
+        dataAssinatura: new Date(dataAssinatura),
+        quantidade,
       },
     });
 
     res.status(201).json(novaAssinatura);
   } catch (error) {
     console.error("Erro ao adicionar assinatura:", error);
-    res.status(500).json({ error: "Erro ao adicionar assinatura." });
+    res.status(500).json({ erro: "Erro ao adicionar assinatura" });
   }
 });
-
-
-
 
 /**
  * @swagger
  * /api/assinatura/{cpf}:
  *   get:
- *     summary: Lista todas as assinaturas de um cliente pelo CPF
+ *     summary: Lista todas as assinaturas de uma pessoa pelo CPF
  *     tags: [Assinaturas]
  *     parameters:
  *       - in: path
@@ -113,49 +88,38 @@ router.post("/", async (req, res) => {
  *         required: true
  *         schema:
  *           type: string
- *         description: CPF do cliente para buscar as assinaturas
+ *         description: CPF da pessoa para buscar as assinaturas
  *     responses:
  *       200:
- *         description: Lista de assinaturas do cliente
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   id:
- *                     type: integer
- *                     description: ID da assinatura
- *                   clienteCpf:
- *                     type: string
- *                     description: CPF do cliente
- *                   dataAssinatura:
- *                     type: string
- *                     format: date
- *                     description: Data da assinatura
- *                   quantidade:
- *                     type: integer
- *                     description: Quantidade de itens na assinatura
+ *         description: Lista de assinaturas da pessoa
+ *       404:
+ *         description: Nenhuma assinatura encontrada
  *       500:
  *         description: Erro ao buscar assinaturas
  */
 
 // GET - Lista todas as assinaturas de um CPF
+// GET - Lista todas as assinaturas de um CPF
 router.get("/:cpf", async (req, res) => {
-  const { cpf } = req.params;
-
   try {
+    console.log("Dados recebidos:", req.params); // Debug
+
+    const { cpf } = req.params;
+
+    if (!cpf) {
+      return res.status(400).json({ erro: "CPF é obrigatório" });
+    }
+
     // Busca todas as assinaturas do CPF fornecido
     const assinaturas = await prisma.assinatura.findMany({
-      where: { clienteCpf: cpf },
+      where: { pessoaCpf: cpf },
       orderBy: { dataAssinatura: "desc" }, // Ordena pela data (mais recente primeiro)
     });
 
     res.status(200).json(assinaturas);
   } catch (error) {
     console.error("Erro ao buscar assinaturas:", error);
-    res.status(500).json({ error: "Erro ao buscar assinaturas." });
+    res.status(500).json({ erro: "Erro ao buscar assinaturas." });
   }
 });
 

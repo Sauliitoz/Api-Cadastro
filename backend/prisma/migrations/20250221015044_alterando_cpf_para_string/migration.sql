@@ -1,3 +1,0 @@
--- AlterTable
-ALTER TABLE "Cliente" ALTER COLUMN "cpf" SET DATA TYPE TEXT,
-ADD CONSTRAINT "Cliente_pkey" PRIMARY KEY ("id");

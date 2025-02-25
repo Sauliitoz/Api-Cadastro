@@ -1,4 +1,3 @@
-
 const express = require("express");
 const { PrismaClient } = require("@prisma/client");
 
@@ -21,8 +20,8 @@ const prisma = new PrismaClient();
 // Mostrar todos os Pessoas no banco de dados
 router.get("/", async (req, res) => {
   try {
-    const clientes = await prisma.cliente.findMany(); 
-    res.json(clientes);
+    const pessoa = await prisma.pessoa.findMany();
+    res.json(pessoa);
   } catch (error) {
     console.error("Erro ao buscar pessoas:", error);
     res.status(500).json({ error: "Erro ao buscar pessoas" });

@@ -53,22 +53,24 @@ router.post("/", async (req, res) => {
     cpf = validacao.cpf; // Usa o CPF formatado pelo validador
 
     // Verifica se o CPF já está cadastrado
-    const clienteExistente = await prisma.cliente.findUnique({
+    const pessoaExistente = await prisma.pessoa.findUnique({
       where: { cpf },
     });
 
-    if (clienteExistente) {
+    if (pessoaExistente) {
       return res.status(400).json({ erro: "CPF já cadastrado" });
     }
 
     // Cadastra nova Pessoa
-    const novoCliente = await prisma.cliente.create({
+    const novoPessoa = await prisma.pessoa.create({
       data: { cpf, nome, rua, numero, bairro },
     });
 
-    res.status(201).json(novoCliente);
+    res.status(201).json(novoPessoa);
   } catch (error) {
-    res.status(400).json({ erro: "Erro ao cadastrar Pessoa", detalhes: error.message });
+    res
+      .status(400)
+      .json({ erro: "Erro ao cadastrar Pessoa", detalhes: error.message });
   }
 });
 

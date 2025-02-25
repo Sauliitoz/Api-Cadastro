@@ -7,7 +7,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Cliente {
+model Pessoa {
   id          Int          @id @default(autoincrement())
   cpf         String       @unique
   nome        String
@@ -19,11 +19,11 @@ model Cliente {
 
 model Assinatura {
   id             Int      @id @default(autoincrement())
-  clienteCpf     String
+  pessoaCpf      String
   dataAssinatura DateTime
   quantidade     Int
 
-  cliente Cliente @relation(fields: [clienteCpf], references: [cpf], onDelete: Cascade)
+  pessoa Pessoa @relation(fields: [pessoaCpf], references: [cpf], onDelete: Cascade)
 
-  @@unique([clienteCpf, dataAssinatura]) // Evita duplicidade na mesma data
+  @@unique([pessoaCpf, dataAssinatura]) // Evita duplicidade na mesma data
 }

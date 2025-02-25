@@ -1,16 +1,16 @@
 import { useState } from "react";
-import { getClient, createClient } from "../services/Api";
+import { getPessoa, createPessoa } from "../services/Api";
 import styled from "styled-components";
 import {
-  ClienteContainer,
-  ClienteTitulo,
-  ClienteInfo,
-} from "../styles/ClientStyle";
+  PessoaContainer,
+  PessoaTitulo,
+  PessoaInfo,
+} from "../styles/PessoaStyle";
 import { Form, Input } from "../styles/FormStyle";
 
 function Home() {
   const [cpf, setCpf] = useState("");
-  const [cliente, setCliente] = useState(null);
+  const [pessoa, setPessoa] = useState(null);
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
   const [formData, setFormData] = useState({
     cpf: "",
@@ -20,26 +20,26 @@ function Home() {
     bairro: "",
   });
 
-  // Busca cliente pelo CPF
+  // Busca pessoa pelo CPF
   const handleSearch = async () => {
     try {
-      const data = await getClient(cpf);
+      const data = await getPessoa(cpf);
 
-      if (data && !data.erro) {
-        console.log("Cliente encontrado:", data);
-        setCliente(data);
+      if (data && data.pessoa) {
+        console.log("Pessoa encontrada:", data.pessoa);
+        setPessoa(data.pessoa);
         setMostrarFormulario(false);
       } else {
         console.log(
-          "CPF não encontrado no banco de Dados, Cadastre um novo cliente."
+          "CPF não encontrado no banco de Dados. Cadastre uma nova Pessoa."
         );
-        setCliente(null);
+        setPessoa(null);
         setMostrarFormulario(true);
         setFormData((prev) => ({ ...prev, cpf }));
       }
     } catch (error) {
-      console.error("Erro ao buscar cliente:", error);
-      alert("Erro ao buscar cliente.");
+      console.error("Erro ao buscar Pessoa:", error);
+      alert("Erro ao buscar Pessoa.");
     }
   };
 
@@ -52,30 +52,36 @@ function Home() {
       [name]: name === "numero" ? Number(value) : value, // Converte apenas "numero" para número
     });
   };
-  // Envia os dados do novo cliente
+
+  // Envia os dados do novo pessoa
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Enviando dados:", formData); // Adiciona log para verificar os dados
+    console.log("Enviando dados:", formData);
+
     try {
-      const response = await fetch(createClient);
+      const response = await fetch(createPessoa, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
 
       if (response.ok) {
-        alert("Cliente cadastrado com sucesso!");
+        alert("Pessoa cadastrada com sucesso!");
         setMostrarFormulario(false);
-        setFormData({ cpf: "", nome: "", rua: "", numero: "", bairro: "" }); // Limpa o formulário
+        setFormData({ cpf: "", nome: "", rua: "", numero: "", bairro: "" });
         setCpf(""); // Limpa o campo de CPF
       } else {
-        alert("Erro ao cadastrar cliente.");
+        alert("Erro ao cadastrar Pessoa.");
       }
     } catch (error) {
       console.error("Erro ao cadastrar:", error);
-      alert("Erro ao cadastrar cliente.");
+      alert("Erro ao cadastrar Pessoa.");
     }
   };
 
   return (
     <Container>
-      <h2>Buscar Cliente</h2>
+      <h2>Buscar Pessoa</h2>
       <Input
         type="text"
         placeholder="Digite o CPF"
@@ -84,30 +90,27 @@ function Home() {
       />
       <button onClick={handleSearch}>Buscar</button>
 
-      {cliente && (
-        <ClienteContainer>
-          <ClienteTitulo>Dados do Cliente</ClienteTitulo>
-          <ClienteInfo>
-            <span>Nome:</span> {cliente.nome}
-          </ClienteInfo>
-          <ClienteInfo>
-            <span>Rua:</span> {cliente.rua}
-          </ClienteInfo>
-          <ClienteInfo>
-            <span>Nº:</span>
-            {cliente.numero}
-          </ClienteInfo>
-          <ClienteInfo>
-            <span>Bairro:</span> {cliente.bairro}
-          </ClienteInfo>
-        </ClienteContainer>
-
-        //adicionar assinaturas aqui
+      {pessoa && (
+        <PessoaContainer>
+          <PessoaTitulo>Dados da Pessoa</PessoaTitulo>
+          <PessoaInfo>
+            <span>Nome:</span> {pessoa.nome}
+          </PessoaInfo>
+          <PessoaInfo>
+            <span>Rua:</span> {pessoa.rua}
+          </PessoaInfo>
+          <PessoaInfo>
+            <span>Nº:</span> {pessoa.numero}
+          </PessoaInfo>
+          <PessoaInfo>
+            <span>Bairro:</span> {pessoa.bairro}
+          </PessoaInfo>
+        </PessoaContainer>
       )}
 
       {mostrarFormulario && (
         <Form onSubmit={handleSubmit}>
-          <h3>Cadastrar Novo Cliente</h3>
+          <h3>Cadastrar Nova Pessoa</h3>
           <Input
             type="text"
             name="cpf"

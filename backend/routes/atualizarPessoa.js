@@ -60,18 +60,18 @@ router.put("/:cpf", async (req, res) => {
 
 
   try {
-    const clienteExistente = await prisma.cliente.findUnique({ where: { cpf } });
+    const pessoaExistente = await prisma.pessoa.findUnique({ where: { cpf } });
 
-    if (!clienteExistente) {
+    if (!pessoaExistente) {
       return res.status(404).json({ erro: "Pessoa não encontrada" });
     }
 
-    const clienteAtualizado = await prisma.cliente.update({
+    const pessoaAtualizado = await prisma.pessoa.update({
       where: { cpf },
       data: { nome, rua, numero, bairro },
     });
 
-    res.json({ mensagem: "Dados atualizados com sucesso", cliente: clienteAtualizado });
+    res.json({ mensagem: "Dados atualizados com sucesso", pessoa: pessoaAtualizado });
   } catch (error) {
     res.status(400).json({ erro: "Erro ao atualizar os dados", detalhes: error.message });
   }
