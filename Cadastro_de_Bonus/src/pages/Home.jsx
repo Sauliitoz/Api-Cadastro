@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { getPessoa, createPessoa } from "../services/Api";
+import { getPessoa, createPessoa, newAssinatura } from "../services/Api";
 import styled from "styled-components";
 import {
   PessoaContainer,
   PessoaTitulo,
   PessoaInfo,
   Section1,
+  Section2,
   SignatureList1,
   SignatureItem1,
   NoSignatureMessage1,
@@ -25,6 +26,10 @@ function Home() {
     bairro: "",
   });
   const [assinaturas, setAssinaturas] = useState([]);
+  const [novaAssinatura, setNovaAssinatura] = useState({
+    dataAssinatura: "",
+    quantidade: "",
+  });
 
   // Busca pessoa pelo CPF
   const handleSearch = async () => {
@@ -87,6 +92,29 @@ function Home() {
     }
   };
 
+  const handleAddAssinatura = async (e) => {
+    e.preventDefault();
+    if (
+      !pessoa ||
+      !novaAssinatura.dataAssinatura ||
+      !novaAssinatura.quantidade
+    ) {
+      alert("Preencha todos os campos!");
+      return;
+    }
+
+    const nova = await newAssinatura(
+      pessoa.cpf,
+      novaAssinatura.dataAssinatura,
+      Number(novaAssinatura.quantidade)
+    );
+
+    if (nova) {
+      setAssinaturas((prev) => [...prev, nova]); // Adiciona à lista SEM recarregar
+      setNovaAssinatura({ dataAssinatura: "", quantidade: "" }); // Reseta os inputs
+    }
+  };
+
   return (
     <Container>
       <h2>Buscar Pessoa</h2>
@@ -95,7 +123,9 @@ function Home() {
         placeholder="Digite o CPF"
         value={cpf}
         onChange={(e) => setCpf(e.target.value)}
+        onKeyDown={(e) => e.key === "Enter" && handleSearch()}
       />
+
       <button onClick={handleSearch}>Buscar</button>
 
       {pessoa && (
@@ -132,6 +162,36 @@ function Home() {
               </NoSignatureMessage1>
             )}
           </Section1>
+
+          <Section2>
+            <Form onSubmit={handleAddAssinatura}>
+              <h3>Adicionar Nova Assinatura</h3>
+              <Input
+                type="date"
+                name="dataAssinatura"
+                value={novaAssinatura.dataAssinatura}
+                onChange={(e) =>
+                  setNovaAssinatura({
+                    ...novaAssinatura,
+                    dataAssinatura: e.target.value,
+                  })
+                }
+              />
+              <Input
+                type="number"
+                name="quantidade"
+                placeholder="Quantidade"
+                value={novaAssinatura.quantidade}
+                onChange={(e) =>
+                  setNovaAssinatura({
+                    ...novaAssinatura,
+                    quantidade: e.target.value,
+                  })
+                }
+              />
+              <button type="submit">Adicionar Assinatura</button>
+            </Form>
+          </Section2>
         </PessoaContainer>
       )}
 

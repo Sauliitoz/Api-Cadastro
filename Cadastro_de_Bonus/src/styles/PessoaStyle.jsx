@@ -46,3 +46,8 @@ export const SignatureItem1 = styled.li`
 export const NoSignatureMessage1 = styled.p`
   color: red;
 `;
+
+export const Section2 = styled.div`
+  margin-top: 20px;
+  
+`;	
